@@ -1,6 +1,6 @@
 # Resourcelyi
 
-Version: v1.1
+Version: v1.2
 
 Resourcelyi is a high-performance system resource monitoring tool written in Go. Displays real-time information about your computer's CPU, RAM, disk usage, and more.
 
@@ -14,10 +14,18 @@ Resourcelyi is a high-performance system resource monitoring tool written in Go.
 - ✅ **Disk Usage**: Monitor disk total/used/free and visual bar
 - ✅ **Disk I/O**: Show per-device read/write speeds (MB/s)
 - 🔁 **Cross-Platform Defaults**: Auto-detects sensible disk path per-OS (Windows → `C:\`, Linux/macOS → `/`)
+ - ✅ **Network Statistics**: Monitor network interfaces, throughput, and per-interface usage
+
+## Changelog
+
+- v1.2 — 2026-05-15
+	- Updated version and release notes.
+	- Network statistics implemented (per-interface Rx/Tx and totals).
+	- Disk I/O implemented (per-device read/write speeds).
+	- Added cross-platform defaults and disk path flag.
 
 ## Upcoming Features (Planned)
 
-- 🔜 **Network Statistics**: Monitor network interfaces, throughput, and per-interface usage (planned)
 - 🔜 **Process Information**: Display top processes by CPU and memory, with optional sorting and filtering (planned)
 - 🔜 **System Information**: Show OS details, uptime, and hardware information such as temperature and sensors (planned)
 - 🔜 **Alerts & Notifications**: Threshold-based alerts and optional integration with external notification systems (planned)
@@ -101,6 +109,33 @@ Used : 13.27 GB (41.50%)
 Free : 18.68 GB
 Memory: [████████░░░░░░░░░░░░░░░░] 41.50%
 ```
+
+### Disk I/O Output Example
+
+```
+╔═══════════════════════════════════════╗
+║         DISK I/O (Read/Write)         ║
+╚═══════════════════════════════════════╝
+sda: Read: 10.24 MB/s | Write: 2.50 MB/s
+nvme0n1: Read: 0.00 MB/s | Write: 0.00 MB/s
+```
+
+### Network Output Example
+
+```
+╔═══════════════════════════════════════╗
+║         NETWORK (Recv/Send)           ║
+╚═══════════════════════════════════════╝
+eth0: Rx: 12.34 MB/s | Tx: 3.21 MB/s
+wlan0: Rx: 0.12 MB/s | Tx: 0.03 MB/s
+Total: Rx: 12.46 MB/s | Tx: 3.24 MB/s
+```
+
+### Notes on Interface Filtering
+
+- The monitor reports all network interfaces by default. If you want to limit output to specific interfaces (for example `eth0` or `wlan0`), you can run the binary and pipe/grep the interface lines, or set a future `-net` filter flag (planned).
+
+
 
 ## Building for Different Platforms
 

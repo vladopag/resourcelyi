@@ -12,7 +12,7 @@ import (
 	"github.com/vladopag/resource-monitor/monitor"
 )
 
-const Version = "v1.1"
+const Version = "v1.2"
 
 // getDefaultDiskPath returns the appropriate default disk path based on the OS
 func getDefaultDiskPath() string {

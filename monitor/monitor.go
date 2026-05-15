@@ -9,25 +9,30 @@ import (
 	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/load"
 	"github.com/shirou/gopsutil/v3/mem"
+	"github.com/shirou/gopsutil/v3/net"
 )
 
 // Monitor holds the resource monitoring functionality
 type Monitor struct {
-	lastCPUCheck    time.Time
-	lastLines       int
-	lastIOCounters  map[string]disk.IOCountersStat
-	lastIOCheckTime time.Time
-	diskPath        string
+	lastCPUCheck     time.Time
+	lastLines        int
+	lastIOCounters   map[string]disk.IOCountersStat
+	lastIOCheckTime  time.Time
+	diskPath         string
+	lastNetCounters  map[string]net.IOCountersStat
+	lastNetCheckTime time.Time
 }
 
 // NewMonitor creates a new Monitor instance
 func NewMonitor(diskPath string) *Monitor {
 	return &Monitor{
-		lastCPUCheck:    time.Now(),
-		lastLines:       0,
-		lastIOCounters:  make(map[string]disk.IOCountersStat),
-		lastIOCheckTime: time.Now(),
-		diskPath:        diskPath,
+		lastCPUCheck:     time.Now(),
+		lastLines:        0,
+		lastIOCounters:   make(map[string]disk.IOCountersStat),
+		lastIOCheckTime:  time.Now(),
+		diskPath:         diskPath,
+		lastNetCounters:  make(map[string]net.IOCountersStat),
+		lastNetCheckTime: time.Now(),
 	}
 }
 
@@ -173,6 +178,41 @@ func (m *Monitor) DisplayCPUUsage() {
 
 		m.lastIOCounters = ioCounters
 		m.lastIOCheckTime = time.Now()
+	}
+
+	// Network I/O Statistics
+	netCounters, err := net.IOCounters(true)
+	if err != nil {
+		fmt.Printf("Error getting network I/O: %v\n", err)
+	} else {
+		output.WriteString("\n╔═══════════════════════════════════════╗\n")
+		output.WriteString("║         NETWORK (Recv/Send)           ║\n")
+		output.WriteString("╚═══════════════════════════════════════╝\n")
+
+		timeDiffNet := time.Since(m.lastNetCheckTime).Seconds()
+		var totalRxMBps, totalTxMBps float64
+		if timeDiffNet > 0 {
+			for _, nc := range netCounters {
+				var rxMBps, txMBps float64
+				if last, exists := m.lastNetCounters[nc.Name]; exists {
+					rxBytes := nc.BytesRecv - last.BytesRecv
+					txBytes := nc.BytesSent - last.BytesSent
+					rxMBps = float64(rxBytes) / timeDiffNet / 1024.0 / 1024.0
+					txMBps = float64(txBytes) / timeDiffNet / 1024.0 / 1024.0
+				}
+				output.WriteString(fmt.Sprintf("%s: Rx: %.2f MB/s | Tx: %.2f MB/s\n", nc.Name, rxMBps, txMBps))
+				totalRxMBps += rxMBps
+				totalTxMBps += txMBps
+			}
+			output.WriteString(fmt.Sprintf("Total: Rx: %.2f MB/s | Tx: %.2f MB/s\n", totalRxMBps, totalTxMBps))
+		}
+
+		// Save current counters for next interval
+		m.lastNetCounters = make(map[string]net.IOCountersStat)
+		for _, nc := range netCounters {
+			m.lastNetCounters[nc.Name] = nc
+		}
+		m.lastNetCheckTime = time.Now()
 	}
 
 	// Move cursor to top-left and clear the screen before printing output.
