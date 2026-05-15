@@ -6,21 +6,28 @@ import (
 	"time"
 
 	"github.com/shirou/gopsutil/v3/cpu"
+	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/load"
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
 // Monitor holds the resource monitoring functionality
 type Monitor struct {
-	lastCPUCheck time.Time
-	lastLines    int
+	lastCPUCheck    time.Time
+	lastLines       int
+	lastIOCounters  map[string]disk.IOCountersStat
+	lastIOCheckTime time.Time
+	diskPath        string
 }
 
 // NewMonitor creates a new Monitor instance
-func NewMonitor() *Monitor {
+func NewMonitor(diskPath string) *Monitor {
 	return &Monitor{
-		lastCPUCheck: time.Now(),
-		lastLines:    0,
+		lastCPUCheck:    time.Now(),
+		lastLines:       0,
+		lastIOCounters:  make(map[string]disk.IOCountersStat),
+		lastIOCheckTime: time.Now(),
+		diskPath:        diskPath,
 	}
 }
 
@@ -77,7 +84,7 @@ func (m *Monitor) DisplayCPUUsage() {
 		for j := barLength; j < 20; j++ {
 			bar += "░"
 		}
-		output.WriteString(fmt.Sprintf("│  CPU %d: [%s] %.2f%%\n", i, bar, percent))
+		output.WriteString(fmt.Sprintf("│  CPU %2d: [%s] %.2f%%\n", i, bar, percent))
 	}
 
 	output.WriteString(fmt.Sprintf("\n└─ Last Updated: %s\n", time.Now().Format("2006-01-02 15:04:05")))
@@ -110,6 +117,63 @@ func (m *Monitor) DisplayCPUUsage() {
 		memBar += "░"
 	}
 	output.WriteString(fmt.Sprintf("Memory: [%s] %.2f%%\n", memBar, memStats.UsedPercent))
+
+	// Disk Usage Statistics
+	diskUsage, err := disk.Usage(m.diskPath)
+	if err != nil {
+		fmt.Printf("Error getting disk usage: %v\n", err)
+	} else {
+		totalGB := float64(diskUsage.Total) / 1024.0 / 1024.0 / 1024.0
+		usedGB := float64(diskUsage.Used) / 1024.0 / 1024.0 / 1024.0
+		freeGB := float64(diskUsage.Free) / 1024.0 / 1024.0 / 1024.0
+
+		diskBarLen := int(diskUsage.UsedPercent / 5)
+		diskBar := ""
+		for j := 0; j < diskBarLen; j++ {
+			diskBar += "█"
+		}
+		for j := diskBarLen; j < 20; j++ {
+			diskBar += "░"
+		}
+
+		output.WriteString("\n╔═══════════════════════════════════════╗\n")
+		output.WriteString("║            DISK USAGE                 ║\n")
+		output.WriteString("╚═══════════════════════════════════════╝\n")
+		output.WriteString(fmt.Sprintf("Total: %.2f GB\n", totalGB))
+		output.WriteString(fmt.Sprintf("Used : %.2f GB (%.2f%%)\n", usedGB, diskUsage.UsedPercent))
+		output.WriteString(fmt.Sprintf("Free : %.2f GB\n", freeGB))
+		output.WriteString(fmt.Sprintf("Disk : [%s] %.2f%%\n", diskBar, diskUsage.UsedPercent))
+	}
+
+	// Disk I/O Statistics
+	ioCounters, err := disk.IOCounters()
+	if err != nil {
+		fmt.Printf("Error getting disk I/O: %v\n", err)
+	} else {
+		output.WriteString("\n╔═══════════════════════════════════════╗\n")
+		output.WriteString("║         DISK I/O (Read/Write)         ║\n")
+		output.WriteString("╚═══════════════════════════════════════╝\n")
+
+		timeDiff := time.Since(m.lastIOCheckTime).Seconds()
+		if timeDiff > 0 {
+			for name, currentIO := range ioCounters {
+				var readMBps, writeMBps float64
+
+				if lastIO, exists := m.lastIOCounters[name]; exists {
+					readBytes := currentIO.ReadBytes - lastIO.ReadBytes
+					writeBytes := currentIO.WriteBytes - lastIO.WriteBytes
+
+					readMBps = float64(readBytes) / timeDiff / 1024.0 / 1024.0
+					writeMBps = float64(writeBytes) / timeDiff / 1024.0 / 1024.0
+				}
+
+				output.WriteString(fmt.Sprintf("%s: Read: %.2f MB/s | Write: %.2f MB/s\n", name, readMBps, writeMBps))
+			}
+		}
+
+		m.lastIOCounters = ioCounters
+		m.lastIOCheckTime = time.Now()
+	}
 
 	// Move cursor to top-left and clear the screen before printing output.
 	fmt.Print("\033[H\033[J")

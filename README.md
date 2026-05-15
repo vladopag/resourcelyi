@@ -1,6 +1,6 @@
 # Resourcelyi
 
-Version: v1.0
+Version: v1.1
 
 Resourcelyi is a high-performance system resource monitoring tool written in Go. Displays real-time information about your computer's CPU, RAM, disk usage, and more.
 
@@ -11,11 +11,17 @@ Resourcelyi is a high-performance system resource monitoring tool written in Go.
 - 🔄 **Load Averages**: Display 1m, 5m, and 15m load averages
 - ⏱️ **Real-time Updates**: Configurable refresh intervals for live monitoring
 - 🚀 **Written in Go**: Fast, lightweight, and easy to deploy
-- 📊 **Upcoming Features**:
-  - **Disk Usage**: Disk space monitoring (planned)
-  - **Network Statistics**: Network interface information (planned)
-  - **Process Information**: Top processes by CPU/memory (planned)
-  - **System Information**: Display OS details, uptime and HW info
+- ✅ **Disk Usage**: Monitor disk total/used/free and visual bar
+- ✅ **Disk I/O**: Show per-device read/write speeds (MB/s)
+- 🔁 **Cross-Platform Defaults**: Auto-detects sensible disk path per-OS (Windows → `C:\`, Linux/macOS → `/`)
+
+## Upcoming Features (Planned)
+
+- 🔜 **Network Statistics**: Monitor network interfaces, throughput, and per-interface usage (planned)
+- 🔜 **Process Information**: Display top processes by CPU and memory, with optional sorting and filtering (planned)
+- 🔜 **System Information**: Show OS details, uptime, and hardware information such as temperature and sensors (planned)
+- 🔜 **Alerts & Notifications**: Threshold-based alerts and optional integration with external notification systems (planned)
+
 
 ## Prerequisites
 
@@ -50,10 +56,22 @@ Run Resourcelyi with default settings (1-second refresh interval):
 
 ### Command Line Options
 - `-i, --interval`: Set update interval in seconds (default: 1)
+- `-disk`: Path to monitor for disk usage (default auto-detected per-OS)
+- `-version`: Print the Resourcelyi version and exit
 
 Example - Update every 2 seconds:
 ```bash
 ./resourcelyi -i 2
+```
+
+Example - Monitor a specific disk path (Windows):
+```bash
+./resourcelyi -disk C:\\
+```
+
+Example - Monitor root filesystem (Linux/macOS):
+```bash
+./resourcelyi -disk /
 ```
 
 ### Output Example
