@@ -1,8 +1,8 @@
 # Resourcelyi
 
-Version: v1.2
+Version: v1.3
 
-Resourcelyi is a high-performance system resource monitoring tool written in Go. Displays real-time information about your computer's CPU, RAM, disk usage, and more.
+Resourcelyi is a high-performance system resource monitoring tool written in Go. Displays real-time information about your computer's CPU, RAM, disk usage, system info, and more.
 
 ## Features
 
@@ -14,7 +14,8 @@ Resourcelyi is a high-performance system resource monitoring tool written in Go.
 - ✅ **Disk Usage**: Monitor disk total/used/free and visual bar
 - ✅ **Disk I/O**: Show per-device read/write speeds (MB/s)
 - 🔁 **Cross-Platform Defaults**: Auto-detects sensible disk path per-OS (Windows → `C:\`, Linux/macOS → `/`)
- - ✅ **Network Statistics**: Monitor network interfaces, throughput, and per-interface usage
+- ✅ **Network Statistics**: Monitor network interfaces, throughput, and per-interface usage
+- ✅ **System Information**: Shows OS details, uptime, hostname, kernel version, and architecture
 
 ## Changelog
 
@@ -27,7 +28,6 @@ Resourcelyi is a high-performance system resource monitoring tool written in Go.
 ## Upcoming Features (Planned)
 
 - 🔜 **Process Information**: Display top processes by CPU and memory, with optional sorting and filtering (planned)
-- 🔜 **System Information**: Show OS details, uptime, and hardware information such as temperature and sensors (planned)
 - 🔜 **Alerts & Notifications**: Threshold-based alerts and optional integration with external notification systems (planned)
 
 

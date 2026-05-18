@@ -2,11 +2,13 @@ package monitor
 
 import (
 	"fmt"
+	"runtime"
 	"strings"
 	"time"
 
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/disk"
+	"github.com/shirou/gopsutil/v3/host"
 	"github.com/shirou/gopsutil/v3/load"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/net"
@@ -34,6 +36,45 @@ func NewMonitor(diskPath string) *Monitor {
 		lastNetCounters:  make(map[string]net.IOCountersStat),
 		lastNetCheckTime: time.Now(),
 	}
+}
+
+func formatDuration(d time.Duration) string {
+	hours := int(d.Hours())
+	minutes := int(d.Minutes()) % 60
+	seconds := int(d.Seconds()) % 60
+	days := hours / 24
+	hours = hours % 24
+
+	if days > 0 {
+		return fmt.Sprintf("%dd %dh %dm %ds", days, hours, minutes, seconds)
+	}
+	if hours > 0 {
+		return fmt.Sprintf("%dh %dm %ds", hours, minutes, seconds)
+	}
+	return fmt.Sprintf("%dm %ds", minutes, seconds)
+}
+
+func (m *Monitor) getSystemInfo() (string, error) {
+	info, err := host.Info()
+	if err != nil {
+		return "", err
+	}
+	if info.Platform == "" {
+		info.Platform = info.OS
+	}
+	uptime := formatDuration(time.Duration(info.Uptime) * time.Second)
+	bootTime := time.Unix(int64(info.BootTime), 0).Format("2006-01-02 15:04:05")
+
+	return fmt.Sprintf("Hostname: %s\nOS: %s %s (%s)\nKernel: %s\nArch: %s\nUptime: %s\nBoot Time: %s\n",
+		info.Hostname,
+		info.Platform,
+		info.PlatformVersion,
+		info.PlatformFamily,
+		info.KernelVersion,
+		runtime.GOARCH,
+		uptime,
+		bootTime,
+	), nil
 }
 
 // DisplayCPUUsage displays the current CPU usage
@@ -69,6 +110,17 @@ func (m *Monitor) DisplayCPUUsage() {
 	// Build output string instead of printing incrementally
 	var output strings.Builder
 
+	systemInfo, err := m.getSystemInfo()
+	if err != nil {
+		fmt.Printf("Error getting system info: %v\n", err)
+		return
+	}
+
+	output.WriteString("╔═══════════════════════════════════════╗\n")
+	output.WriteString("║         SYSTEM INFORMATION            ║\n")
+	output.WriteString("╚═══════════════════════════════════════╝\n")
+	output.WriteString(systemInfo)
+	output.WriteString("\n")
 	output.WriteString("╔═══════════════════════════════════════╗\n")
 	output.WriteString("║         CPU USAGE MONITORING          ║\n")
 	output.WriteString("╚═══════════════════════════════════════╝\n")
