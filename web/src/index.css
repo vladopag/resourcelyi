@@ -1,0 +1,150 @@
+:root {
+  color-scheme: dark;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  line-height: 1.5;
+  background: #0f1419;
+  color: #e7ecf3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.header p {
+  margin: 0.25rem 0 0;
+  color: #9aa7b8;
+}
+
+.status {
+  font-size: 0.875rem;
+  color: #9aa7b8;
+  text-align: right;
+}
+
+.status.error {
+  color: #ff7b7b;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid.two {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  background: #1a2332;
+  border: 1px solid #2a3a52;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.card h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  color: #8eb4ff;
+  letter-spacing: 0.02em;
+}
+
+.kv {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.kv div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.kv span:last-child {
+  color: #c5d4e8;
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-row {
+  margin-top: 0.75rem;
+}
+
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.bar-track {
+  height: 10px;
+  background: #2a3a52;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3d7eff, #5ecfff);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.core-list {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.4rem 0.25rem;
+  border-bottom: 1px solid #2a3a52;
+}
+
+.table th {
+  color: #9aa7b8;
+  font-weight: 500;
+}
+
+.table td:last-child,
+.table th:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

@@ -1,6 +1,6 @@
 # Resourcelyi
 
-Version: v1.3
+Version: v2.0
 
 Resourcelyi is a high-performance system resource monitoring tool written in Go. Displays real-time information about your computer's CPU, RAM, disk usage, system info, and more.
 
@@ -16,8 +16,13 @@ Resourcelyi is a high-performance system resource monitoring tool written in Go.
 - 🔁 **Cross-Platform Defaults**: Auto-detects sensible disk path per-OS (Windows → `C:\`, Linux/macOS → `/`)
 - ✅ **Network Statistics**: Monitor network interfaces, throughput, and per-interface usage
 - ✅ **System Information**: Shows OS details, uptime, hostname, kernel version, and architecture
+- ✅ **Web Dashboard**: React GUI with REST API (`/api/metrics`)
 
 ## Changelog
+
+- v2.0 — 2026-05-19
+	- Web dashboard with React and REST API (`/api/metrics`).
+	- Refactored metrics collection into shared `Collect()` for CLI and API.
 
 - v1.2 — 2026-05-15
 	- Updated version and release notes.
@@ -34,6 +39,7 @@ Resourcelyi is a high-performance system resource monitoring tool written in Go.
 ## Prerequisites
 
 - Go 1.21 or higher
+- Node.js 18+ (for the web dashboard only)
 - Linux, macOS, or Windows
 
 ## Installation
@@ -81,6 +87,52 @@ Example - Monitor root filesystem (Linux/macOS):
 ```bash
 ./resourcelyi -disk /
 ```
+
+## Web Dashboard (React + REST)
+
+The GUI uses a Go REST API and a React frontend in `web/`.
+
+### 1. Start the API server
+
+```bash
+go run ./cmd/server
+```
+
+Options:
+
+- `-addr`: Listen address (default: `127.0.0.1:8080`)
+- `-disk`: Disk path to monitor (default: OS-specific, same as CLI)
+
+Endpoints:
+
+- `GET /api/health` — health check
+- `GET /api/metrics` — full metrics JSON snapshot
+
+Example:
+
+```bash
+curl http://127.0.0.1:8080/api/metrics
+```
+
+### 2. Start the React dev server
+
+In a second terminal:
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+Open **http://localhost:5173**. Vite proxies `/api` to the Go server on port 8080.
+
+### 3. Production build (optional)
+
+```bash
+cd web && npm run build
+```
+
+Serve `web/dist/` with any static file server, or add `go:embed` later to ship a single binary.
 
 ### Output Example
 ```
@@ -157,11 +209,18 @@ GOOS=windows GOARCH=amd64 go build -o resourcelyi.exe
 ## Project Structure
 ```
 resource-monitor/
-├── go.mod                 # Go module definition
-├── main.go               # Entry point and CLI handling
-├── monitor/
-│   └── monitor.go        # Core monitoring functionality
-└── README.md             # This file
+├── go.mod
+├── main.go                 # CLI entry point
+├── cmd/server/main.go      # REST API server
+├── internal/server/        # HTTP handlers
+├── monitor/                # Metrics collection + terminal UI
+│   ├── collect.go
+│   ├── display.go
+│   ├── types.go
+│   └── ...
+├── web/                    # React dashboard (Vite)
+│   └── src/
+└── README.md
 ```
 
 ## Contributing

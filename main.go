@@ -12,25 +12,14 @@ import (
 	"github.com/vladopag/resource-monitor/monitor"
 )
 
-const Version = "v1.3"
-
-// getDefaultDiskPath returns the appropriate default disk path based on the OS
-func getDefaultDiskPath() string {
-	switch runtime.GOOS {
-	case "windows":
-		return "C:\\"
-	default:
-		// Linux, macOS, and other Unix-like systems
-		return "/"
-	}
-}
+const Version = "v2.0"
 
 func main() {
 	// Command-line flags
 	interval := flag.Int("i", 1, "Update interval in seconds")
 	flag.IntVar(interval, "interval", 1, "Update interval in seconds")
 
-	defaultDiskPath := getDefaultDiskPath()
+	defaultDiskPath := monitor.DefaultDiskPath()
 	helpText := fmt.Sprintf("Disk path to monitor (default: %s)", defaultDiskPath)
 	diskPath := flag.String("disk", defaultDiskPath, helpText)
 
@@ -62,9 +51,8 @@ func main() {
 	// Create monitor instance
 	resourceMonitor := monitor.NewMonitor(*diskPath)
 
-	// Enter alternate screen buffer so updates stay in place.
-	fmt.Print("\033[?1049h")
-	defer fmt.Print("\033[?1049l")
+	restoreTerminal := monitor.EnableTerminalModes()
+	defer restoreTerminal()
 
 	// Main monitoring loop
 	for {
