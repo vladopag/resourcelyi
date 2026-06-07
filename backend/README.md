@@ -43,7 +43,7 @@ Example:
 
 ```bash
 mvn spring-boot:run -Dspring-boot.run.arguments=--cli,--interval=2
-java -jar target/resourcelyi-backend-3.0.0.jar --cli
+java -jar target/resourcelyi-backend-3.1.0.jar --cli
 ```
 
 Press **Ctrl+C** to exit.
@@ -82,8 +82,19 @@ mvn spring-boot:run
 
 ```bash
 mvn package
-java -jar target/resourcelyi-backend-3.0.0.jar
+java -jar target/resourcelyi-backend-3.1.0.jar
 ```
+
+## Docker
+
+From the repository root:
+
+```bash
+docker build -t resourcelyi:3.1 .
+docker compose up --build
+```
+
+The image serves the API and React UI on port **8080**.
 
 ## With React dev server
 

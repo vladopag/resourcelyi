@@ -1,6 +1,6 @@
 # Resourcelyi
 
-Version: v3.0
+Version: v3.1
 
 System resource monitor with a terminal CLI, Spring Boot REST API, and React web dashboard. The original Go implementation is archived in `backup/go-v2.0/`.
 
@@ -58,11 +58,38 @@ npm run dev
 
 Start the backend on port **8080** first; Vite proxies `/api` to `http://127.0.0.1:8080`.
 
+## Docker
+
+Build and run a single image (API + React dashboard on port 8080):
+
+```bash
+docker build -t resourcelyi:3.1 .
+docker run --rm -p 8080:8080 \
+  --pid=host \
+  -v /:/hostfs:ro \
+  -e RESOURCELYI_DISK_PATH=/hostfs \
+  resourcelyi:3.1
+```
+
+Or with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+Open **http://localhost:8080** for the dashboard. API: `http://localhost:8080/api/metrics`.
+
+On Linux, `pid: host` and the `/hostfs` volume mount help OSHI report host CPU/memory/disk instead of only the container. Adjust `RESOURCELYI_DISK_PATH` for the filesystem you want to monitor (e.g. `/hostfs` when using the compose file).
+
 ## Changelog
+
+- v3.1 — 2026-06-08
+	- Docker packaging (multi-stage image with embedded dashboard).
 
 - v3.0 — 2026-06-07
 	- Terminal CLI mode (`--cli`) in Spring Boot backend.
 	- Java Spring Boot replaces Go as the active backend.
+	- Docker image with embedded React dashboard.
 
 - v2.0 — 2026-05-19
 	- Web dashboard with React and REST API.

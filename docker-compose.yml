@@ -1,0 +1,13 @@
+services:
+  resourcelyi:
+    build: .
+    image: resourcelyi:3.1
+    ports:
+      - "8080:8080"
+    # Host metrics on Linux: share the host PID namespace and root filesystem (read-only).
+    pid: host
+    volumes:
+      - /:/hostfs:ro
+    environment:
+      RESOURCELYI_DISK_PATH: /hostfs
+    restart: unless-stopped

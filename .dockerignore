@@ -1,0 +1,12 @@
+.git
+.gitignore
+**/.git
+backup/
+web/node_modules/
+web/dist/
+backend/target/
+**/*.md
+!backend/README.md
+**/.cursor/
+**/.vscode/
+**/terminals/
