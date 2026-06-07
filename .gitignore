@@ -1,4 +1,7 @@
-resourcelyi
-resourcelyi.exe
+backup/go-v2.0/resourcelyi
+backup/go-v2.0/resourcelyi.exe
+backup/go-v2.0/resourcelyi-server
+backup/go-v2.0/resourcelyi-server.exe
 web/node_modules/
 web/dist/
+target/

@@ -49,9 +49,8 @@ export default function App() {
           <h1>Resourcelyi</h1>
           <p>System resource dashboard</p>
         </div>
-        <div className={`status${error ? " error" : ""}`}>
-          {loading && !data && <div>Connecting…</div>}
-          {error && <div>{error}</div>}
+        <div className="status">
+          {loading && !data && !error && <div>Connecting…</div>}
           {data && (
             <div>
               Last update
@@ -237,9 +236,13 @@ export default function App() {
       )}
 
       {!data && !loading && error && (
-        <p className="status error">
-          Start the API server: <code>go run ./cmd/server</code>
-        </p>
+        <div className="error-panel">
+          <p className="status error">{error}</p>
+          <p>
+            Start the Spring Boot API server:{" "}
+            <code>cd backend && mvn spring-boot:run</code>
+          </p>
+        </div>
       )}
     </div>
   );

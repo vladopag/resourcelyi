@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+resourcelyi:
+  # Leave empty to auto-detect (C:\ on Windows, / elsewhere)
+  disk-path:
+
+spring:
+  application:
+    name: resourcelyi

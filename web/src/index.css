@@ -53,6 +53,27 @@ body {
   color: #ff7b7b;
 }
 
+.error-panel {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  background: #1a2332;
+  border: 1px solid #5a3030;
+  border-radius: 10px;
+}
+
+.error-panel p {
+  margin: 0 0 0.75rem;
+}
+
+.error-panel p:last-child {
+  margin-bottom: 0;
+  color: #9aa7b8;
+}
+
+.error-panel code {
+  color: #c5d4e8;
+}
+
 .grid {
   display: grid;
   gap: 1rem;
