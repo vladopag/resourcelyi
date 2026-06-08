@@ -54,7 +54,11 @@ public final class TerminalDisplay {
         output.append("Kernel: ").append(system.kernel()).append('\n');
         output.append("Arch: ").append(system.arch()).append('\n');
         output.append("Uptime: ").append(system.uptime()).append('\n');
-        output.append("Boot Time: ").append(system.bootTime()).append("\n\n");
+        output.append("Boot Time: ").append(system.bootTime()).append('\n');
+        if ("docker".equals(system.runtimeEnvironment())) {
+            output.append("Runtime: Docker container (not the physical host OS)\n");
+        }
+        output.append('\n');
     }
 
     private static void appendCpuSection(StringBuilder output, Snapshot snapshot) {

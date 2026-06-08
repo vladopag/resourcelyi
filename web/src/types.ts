@@ -18,6 +18,7 @@ export interface SystemInfo {
   uptime: string;
   uptimeSeconds: number;
   bootTime: string;
+  runtimeEnvironment: string;
 }
 
 export interface CPUStats {

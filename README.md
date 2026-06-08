@@ -1,6 +1,6 @@
 # Resourcelyi
 
-Version: v3.1
+Version: v3.2
 
 System resource monitor with a terminal CLI, Spring Boot REST API, and React web dashboard. The original Go implementation is archived in `backup/go-v2.0/`.
 
@@ -63,12 +63,12 @@ Start the backend on port **8080** first; Vite proxies `/api` to `http://127.0.0
 Build and run a single image (API + React dashboard on port 8080):
 
 ```bash
-docker build -t resourcelyi:3.1 .
+docker build -t resourcelyi:3.2 .
 docker run --rm -p 8080:8080 \
   --pid=host \
   -v /:/hostfs:ro \
   -e RESOURCELYI_DISK_PATH=/hostfs \
-  resourcelyi:3.1
+  resourcelyi:3.2
 ```
 
 Or with Docker Compose:
@@ -79,9 +79,54 @@ docker compose up --build
 
 Open **http://localhost:8080** for the dashboard. API: `http://localhost:8080/api/metrics`.
 
-On Linux, `pid: host` and the `/hostfs` volume mount help OSHI report host CPU/memory/disk instead of only the container. Adjust `RESOURCELYI_DISK_PATH` for the filesystem you want to monitor (e.g. `/hostfs` when using the compose file).
+On **Linux**, `pid: host` and the `/hostfs` volume mount help OSHI report host CPU/memory/disk instead of only the container.
+
+### Docker on Windows — important
+
+Docker Desktop on Windows runs a **Linux container** (Alpine). The dashboard will show **container / Linux VM** info (e.g. Alpine Linux, container hostname), **not** your Windows PC. That is expected — containers cannot see the Windows host OS through OSHI.
+
+**To monitor your real Windows machine**, run the app **without Docker**:
+
+1. Install **JDK 21** ([Eclipse Temurin](https://adoptium.net/)) and **Node.js 18+**
+2. Build (includes React dashboard):
+
+```bat
+scripts\build-windows.bat
+```
+
+3. Run:
+
+```bat
+scripts\run-windows.bat
+```
+
+Or manually: `java -jar backend\target\resourcelyi-backend-3.2.0.jar --resourcelyi.disk-path=C:\`
+
+Open **http://localhost:8080** — the JAR serves the API and embedded dashboard.
+
+Use **Docker** when you want easy deployment (Linux server, or container metrics). Use the **JAR on Windows** when you want true Windows host metrics.
+
+### Share via Docker Hub (Option B)
+
+```bash
+docker tag resourcelyi:3.2 YOUR_USER/resourcelyi:3.2
+docker push YOUR_USER/resourcelyi:3.2
+```
+
+On another PC:
+
+```bash
+docker pull YOUR_USER/resourcelyi:3.2
+docker run --rm -p 8080:8080 YOUR_USER/resourcelyi:3.2
+```
+
+For **Windows host metrics** on that PC, distribute the JAR instead (or build from source).
 
 ## Changelog
+
+- v3.2 — 2026-06-08
+	- Docker container detection and dashboard warning banner.
+	- Windows native build/run scripts for full host metrics.
 
 - v3.1 — 2026-06-08
 	- Docker packaging (multi-stage image with embedded dashboard).

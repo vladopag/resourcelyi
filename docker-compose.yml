@@ -1,10 +1,10 @@
 services:
   resourcelyi:
     build: .
-    image: resourcelyi:3.1
+    image: resourcelyi:3.2
     ports:
       - "8080:8080"
-    # Host metrics on Linux: share the host PID namespace and root filesystem (read-only).
+    # Host metrics on Linux only (ignored on Docker Desktop for Windows).
     pid: host
     volumes:
       - /:/hostfs:ro

@@ -21,6 +21,7 @@ import com.vladopag.resourcelyi.dto.NetworkStats;
 import com.vladopag.resourcelyi.dto.Snapshot;
 import com.vladopag.resourcelyi.dto.SystemInfo;
 import com.vladopag.resourcelyi.support.DurationFormatter;
+import com.vladopag.resourcelyi.support.RuntimeEnvironment;
 
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
@@ -112,7 +113,8 @@ public class MetricsService {
                 System.getProperty("os.arch", "unknown"),
                 DurationFormatter.formatSeconds(uptimeSeconds),
                 uptimeSeconds,
-                BOOT_TIME_FORMAT.format(bootInstant));
+                BOOT_TIME_FORMAT.format(bootInstant),
+                RuntimeEnvironment.detect());
 
         GlobalMemory memory = hal.getMemory();
         long memTotal = memory.getTotal();

@@ -8,7 +8,7 @@ import com.vladopag.resourcelyi.service.MetricsService;
 @Component
 public class CliRunner implements CommandLineRunner {
 
-    private static final String VERSION = "v3.1";
+    private static final String VERSION = "v3.2";
 
     private final MetricsService metricsService;
 

@@ -13,7 +13,7 @@
 
     <groupId>com.vladopag</groupId>
     <artifactId>resourcelyi-backend</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
     <name>resourcelyi-backend</name>
     <description>Resourcelyi system metrics REST API</description>
 

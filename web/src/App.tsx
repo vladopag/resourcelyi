@@ -61,6 +61,13 @@ export default function App() {
         </div>
       </header>
 
+      {data?.system.runtimeEnvironment === "docker" && (
+        <div className="banner warning">
+          Running in Docker — metrics show the <strong>container</strong> (Linux), not your
+          Windows PC. For full Windows host info, run the JAR natively (see README).
+        </div>
+      )}
+
       {data && (
         <>
           <section className="grid">

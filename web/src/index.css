@@ -53,6 +53,20 @@ body {
   color: #ff7b7b;
 }
 
+.banner {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.banner.warning {
+  background: #2a2418;
+  border: 1px solid #6b5420;
+  color: #e8d4a8;
+}
+
 .error-panel {
   margin-top: 2rem;
   padding: 1rem 1.25rem;

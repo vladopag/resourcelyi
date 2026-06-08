@@ -9,4 +9,5 @@ public record SystemInfo(
         String arch,
         String uptime,
         long uptimeSeconds,
-        String bootTime) {}
+        String bootTime,
+        String runtimeEnvironment) {}
