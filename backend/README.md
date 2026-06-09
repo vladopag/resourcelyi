@@ -43,7 +43,7 @@ Example:
 
 ```bash
 mvn spring-boot:run -Dspring-boot.run.arguments=--cli,--interval=2
-java -jar target/resourcelyi-backend-3.2.0.jar --cli
+java -jar target/resourcelyi-backend-3.3.0.jar --cli
 ```
 
 Press **Ctrl+C** to exit.
@@ -82,7 +82,7 @@ mvn spring-boot:run
 
 ```bash
 mvn package
-java -jar target/resourcelyi-backend-3.2.0.jar
+java -jar target/resourcelyi-backend-3.3.0.jar
 ```
 
 ## Docker
@@ -90,7 +90,7 @@ java -jar target/resourcelyi-backend-3.2.0.jar
 From the repository root:
 
 ```bash
-docker build -t resourcelyi:3.2 .
+docker build -t resourcelyi:3.3 .
 docker compose up --build
 ```
 

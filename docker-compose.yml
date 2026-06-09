@@ -1,7 +1,7 @@
 services:
   resourcelyi:
     build: .
-    image: resourcelyi:3.2
+    image: resourcelyi:3.3
     ports:
       - "8080:8080"
     # Host metrics on Linux only (ignored on Docker Desktop for Windows).

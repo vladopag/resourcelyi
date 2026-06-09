@@ -1,6 +1,6 @@
 # Resourcelyi
 
-Version: v3.2
+Version: v3.3
 
 System resource monitor with a terminal CLI, Spring Boot REST API, and React web dashboard. The original Go implementation is archived in `backup/go-v2.0/`.
 
@@ -63,12 +63,12 @@ Start the backend on port **8080** first; Vite proxies `/api` to `http://127.0.0
 Build and run a single image (API + React dashboard on port 8080):
 
 ```bash
-docker build -t resourcelyi:3.2 .
+docker build -t resourcelyi:3.3 .
 docker run --rm -p 8080:8080 \
   --pid=host \
   -v /:/hostfs:ro \
   -e RESOURCELYI_DISK_PATH=/hostfs \
-  resourcelyi:3.2
+  resourcelyi:3.3
 ```
 
 Or with Docker Compose:
@@ -100,7 +100,7 @@ scripts\build-windows.bat
 scripts\run-windows.bat
 ```
 
-Or manually: `java -jar backend\target\resourcelyi-backend-3.2.0.jar --resourcelyi.disk-path=C:\`
+Or manually: `java -jar backend\target\resourcelyi-backend-3.3.0.jar --resourcelyi.disk-path=C:\`
 
 Open **http://localhost:8080** — the JAR serves the API and embedded dashboard.
 
@@ -109,20 +109,53 @@ Use **Docker** when you want easy deployment (Linux server, or container metrics
 ### Share via Docker Hub (Option B)
 
 ```bash
-docker tag resourcelyi:3.2 YOUR_USER/resourcelyi:3.2
-docker push YOUR_USER/resourcelyi:3.2
+docker tag resourcelyi:3.3 YOUR_USER/resourcelyi:3.3
+docker push YOUR_USER/resourcelyi:3.3
 ```
 
 On another PC:
 
 ```bash
-docker pull YOUR_USER/resourcelyi:3.2
-docker run --rm -p 8080:8080 YOUR_USER/resourcelyi:3.2
+docker pull YOUR_USER/resourcelyi:3.3
+docker run --rm -p 8080:8080 YOUR_USER/resourcelyi:3.3
 ```
 
 For **Windows host metrics** on that PC, distribute the JAR instead (or build from source).
 
+## CI/CD
+
+GitHub Actions workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
+
+1. **Unit tests** — `mvn test` in `backend/`
+2. **Docker build** — on PRs, builds only (no push)
+3. **Docker push** — on `main`, pushes to Docker Hub as `:3.3` and `:latest`
+
+### GitHub secrets (for Docker Hub push)
+
+In your repo: **Settings → Secrets and variables → Actions**, add:
+
+| Secret | Value |
+|--------|--------|
+| `DOCKERHUB_USERNAME` | Your Docker Hub username |
+| `DOCKERHUB_TOKEN` | Docker Hub access token ([create here](https://hub.docker.com/settings/security)) |
+
+After a push to `main`:
+
+```bash
+docker pull YOUR_USER/resourcelyi:latest
+docker run --rm -p 8080:8080 YOUR_USER/resourcelyi:latest
+```
+
+Run tests locally:
+
+```bash
+cd backend && mvn test
+```
+
 ## Changelog
+
+- v3.3 — 2026-06-09
+	- GitHub Actions CI/CD with unit tests and Docker Hub publish.
 
 - v3.2 — 2026-06-08
 	- Docker container detection and dashboard warning banner.

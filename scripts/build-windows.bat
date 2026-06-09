@@ -22,5 +22,5 @@ call mvn package -DskipTests
 if errorlevel 1 exit /b 1
 
 echo.
-echo Done: backend\target\resourcelyi-backend-3.2.0.jar
+echo Done: backend\target\resourcelyi-backend-3.3.0.jar
 echo Run: scripts\run-windows.bat

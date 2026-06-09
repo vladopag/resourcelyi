@@ -24,7 +24,7 @@ WORKDIR /app
 RUN apk add --no-cache wget \
     && addgroup -S resourcelyi && adduser -S resourcelyi -G resourcelyi
 
-COPY --from=backend-build /app/backend/target/resourcelyi-backend-3.2.0.jar app.jar
+COPY --from=backend-build /app/backend/target/resourcelyi-backend-3.3.0.jar app.jar
 
 USER resourcelyi
 
