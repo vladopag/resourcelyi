@@ -1,3 +1,9 @@
+export interface HealthResponse {
+  status: string;
+  version: string;
+  displayVersion: string;
+}
+
 export interface Snapshot {
   timestamp: string;
   system: SystemInfo;

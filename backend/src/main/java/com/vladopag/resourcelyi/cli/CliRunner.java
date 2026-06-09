@@ -4,16 +4,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.vladopag.resourcelyi.service.MetricsService;
+import com.vladopag.resourcelyi.support.AppVersion;
 
 @Component
 public class CliRunner implements CommandLineRunner {
 
-    private static final String VERSION = "v3.3";
-
     private final MetricsService metricsService;
+    private final AppVersion appVersion;
 
-    public CliRunner(MetricsService metricsService) {
+    public CliRunner(MetricsService metricsService, AppVersion appVersion) {
         this.metricsService = metricsService;
+        this.appVersion = appVersion;
     }
 
     @Override
@@ -23,7 +24,7 @@ public class CliRunner implements CommandLineRunner {
         }
 
         if (CliArguments.hasFlag(args, "--version")) {
-            System.out.println("Resourcelyi " + VERSION);
+            System.out.println("Resourcelyi " + appVersion.displayVersion());
             return;
         }
 

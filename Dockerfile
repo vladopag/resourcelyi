@@ -19,6 +19,8 @@ RUN mvn -B package -DskipTests
 
 # --- Runtime ---
 FROM eclipse-temurin:21-jre-alpine
+LABEL org.opencontainers.image.title="resourcelyi" \
+      org.opencontainers.image.version="3.3.0"
 WORKDIR /app
 
 RUN apk add --no-cache wget \

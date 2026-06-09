@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { fetchMetrics } from "./api";
+import { fetchHealth, fetchMetrics } from "./api";
 import type { Snapshot } from "./types";
 
 const POLL_MS = 1000;
@@ -23,6 +23,13 @@ export default function App() {
   const [data, setData] = useState<Snapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [appVersion, setAppVersion] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchHealth()
+      .then((health) => setAppVersion(health.displayVersion))
+      .catch(() => {});
+  }, []);
 
   const load = useCallback(async () => {
     try {
@@ -47,7 +54,10 @@ export default function App() {
       <header className="header">
         <div>
           <h1>Resourcelyi</h1>
-          <p>System resource dashboard</p>
+          <p>
+            System resource dashboard
+            {appVersion && <span className="app-version"> · {appVersion}</span>}
+          </p>
         </div>
         <div className="status">
           {loading && !data && !error && <div>Connecting…</div>}
